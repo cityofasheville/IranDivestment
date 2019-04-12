@@ -1,3 +1,4 @@
+// Pull current Avl vendor list from DB
 const Connection = require('tedious').Connection;
 const Request = require('tedious').Request;
 let fs = require('fs');
@@ -8,18 +9,18 @@ const dbConfig = {
     authentication: {
         type: "default",
         options: {
-            userName: process.env.munisuser, 
-            password: process.env.munispassword, 
+            userName: process.env.user, 
+            password: process.env.password, 
         }
     },
-    server: process.env.munishost,
+    server: process.env.host,
     options: {
-        database: process.env.munisdatabase,  
+        database: process.env.database,  
         encrypt: false
     }
 }
 
-function get_avl_vendors(){
+function getAvlVendors(){
     let vendors = [];
     return new Promise(function(resolve, reject) {
         const connection = new Connection(dbConfig);
@@ -58,4 +59,4 @@ process.on('uncaughtException', (err)=>{
 });
 
 
-module.exports = get_avl_vendors;
+module.exports = getAvlVendors;

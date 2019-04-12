@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "^7.0.0",
     "googleapis": "^27.0.0",
-    "tedious": "^6.1.0"
+    "pg": "^7.9.0",
+    "pg-cursor": "^2.0.0"
   }
 }

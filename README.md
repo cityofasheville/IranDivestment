@@ -1,4 +1,4 @@
-Reads Iranian Vendors from the Google Sheet 
+Reads divestment Vendors from the Google Sheet 
 https://docs.google.com/spreadsheets/d/<spreadsheetid>/edit
 And compares vendors Asheville currently uses. Sends email if found.
 

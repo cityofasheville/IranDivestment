@@ -1,7 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
-let get_avl_vendors = require('./get_avl_vendors');
+let checkForMatches = require('./checkForMatches');
 
 require('dotenv').config();
 
@@ -17,7 +17,7 @@ const TOKEN_PATH = 'token.json';
 fs.readFile('credentials.json', (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
   // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listData);
+  authorize(JSON.parse(content), getData);
 });
 
 /**
@@ -70,25 +70,54 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-function listData(auth) {
+function getData(auth) {
+  try {
+      getDivestmentData(auth).then(divestment_vendors=>{
+        getApproved(auth).then(approved_vendors=>{
+          checkForMatches(approved_vendors,divestment_vendors);
+        });
+      });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function getDivestmentData(auth) {
+  return new Promise(function(resolve, reject) {
     const sheets = google.sheets({version: 'v4', auth});
     sheets.spreadsheets.values.get({
         spreadsheetId: process.env.spreadsheetid,
-        range: 'Sheet1!A5:B',
+        range: 'Bad Actors!A5:B',
     }, (err, res) => {
         if (err) return console.log('The API returned an error: ' + err);
-        const iranian_vendors = res.data.values;
-        if (iranian_vendors.length) {
-          get_avl_vendors().then(avl_vendors=>{
-            check_for_matches(avl_vendors,iranian_vendors);
-          });
+        const divestment_vendors = res.data.values;
+        if (divestment_vendors.length) {
+          resolve(divestment_vendors);
         } else {
             console.log('No data found.');
         }
     });
-  }
+  });
+}
 
-function check_for_matches (avl_vendors,iranian_vendors){
-  console.log(avl_vendors[12][1].value);
-  console.log(iranian_vendors[0][1]);
-}   
+function getApproved(auth) {
+  return new Promise(function(resolve, reject) {
+    const sheets = google.sheets({version: 'v4', auth});
+    sheets.spreadsheets.values.get({
+        spreadsheetId: process.env.spreadsheetid,
+        range: 'Approved Companies!A6:B',
+    }, (err, res) => { if(!res.data.values) { resolve(); return; }
+        if (err) reject('The API returned an error: ' + err);
+        const approved_vendors = res.data.values;
+        if (approved_vendors.length) {
+          resolve(approved_vendors);
+        } else {
+          reject('No data found.');
+        }
+    });
+  });
+}
+
+process.on('uncaughtException', (err)=>{
+  console.log(err);
+});
