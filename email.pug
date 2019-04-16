@@ -1,0 +1,21 @@
+html
+  body
+    h3 The following Munis vendors are listed on the 
+      a(href='https://docs.google.com/spreadsheets/d/1FOmrFm5afRc_XqTeF2T-ilWtZDIYzdqKiZlPX129IQA') Iran Divestment Sheet.
+
+    table(style='border:1px solid grey;font-size:14px;width:100%')
+      thead
+        tr(style='background-color: #5D7B9D; color: white;')
+          th ID
+          th Name
+          th Alpha Sort
+          th DBA
+          th Key Word Match
+      tbody
+        each val in listOfVendors
+          tr
+            td(style="background-color: #e6ebf0;") #{val.a_vendor_id}
+            td(style="background-color: #f1f4f7;") #{val.a_vendor_name}
+            td(style="background-color: #e6ebf0;") #{val.a_vend_alpha_sort}
+            td(style="background-color: #f1f4f7;") #{val.v_dba}
+            td(style="background-color: #e6ebf0;") #{val.keyword}
