@@ -59,16 +59,8 @@ async function checkForMatches(approved_vendors,divestment_vendors) {
         }    
     })
 
-    if(divestmentVendors.length>0) {
-        // console.log(
-        //     divestmentVendors[0].a_vendor_id,
-        //     divestmentVendors[0].a_vendor_name,
-        //     divestmentVendors[0].a_vend_alpha_sort,
-        //     divestmentVendors[0].v_dba,
-        //     divestmentVendors[0].keyword
-        // )
-        sendEmails(divestmentVendors)
-    }
+    sendEmails(divestmentVendors)
+
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////
