@@ -1,2 +1,0 @@
-## IRAN DIVESTMENT Monday night at 4:59 UTC (right before midnight)
-58 4 * * 1 node /home/ubuntu/IranDivestment/index.js > /home/ubuntu/IranDivestment/cronlogs/cronlog.log

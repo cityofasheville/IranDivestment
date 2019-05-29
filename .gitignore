@@ -1,7 +1,5 @@
 node_modules/
 .env
-token.json
-credentials
-credentials.json
+client_secret.json
 *.zip
 cronlogs/
