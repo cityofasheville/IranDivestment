@@ -1,6 +1,23 @@
 const {google} = require('googleapis');
 let checkForMatches = require('./checkForMatches');
-let privatekey = require('./client_secret.json');
+
+let privatekey = 
+{
+  "type": process.env.key_type,
+  "project_id": process.env.project_id,
+  "private_key_id": process.env.private_key_id,
+  "private_key": process.env.private_key,
+  "client_email": process.env.client_email,
+  "client_id": process.env.client_id,
+  "auth_uri": process.env.auth_uri,
+  "token_uri": process.env.token_uri,
+  "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
+  "client_x509_cert_url": process.env.client_x509_cert_url
+};
+
+console.log(privatekey);
+
+
 
 exports.handler = (event, context, callback) => {
   // configure a JWT auth client
@@ -10,7 +27,6 @@ exports.handler = (event, context, callback) => {
     privatekey.private_key,
     ['https://www.googleapis.com/auth/spreadsheets.readonly']);
   //authenticate request
-
   jwtClient.authorize(function (err, tokens) {
     if (err) {
       console.log(err);
@@ -38,7 +54,7 @@ function getDivestmentData(auth) {
       auth,
       spreadsheetId,
       range
-    }, function (err, response) { console.log("err response", err, response);
+    }, function (err, response) { //console.log("response", response);
       if (err) {
         reject(new Error('The API returned an error: ' + err));
       }         

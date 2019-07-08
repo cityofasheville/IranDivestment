@@ -3,8 +3,6 @@ const Cursor = require('pg-cursor')
 const {promisify} = require('util');
 let sendEmails = require('./sendEmails');
 
-require('dotenv').config();
-
 async function checkForMatches(approved_vendors,divestment_vendors) {
     let keyWordFound = [];          // vendors in our database containing a keyword in divestment list
     let divestmentVendors = [];      // vendors also not marked as approved.
