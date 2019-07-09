@@ -18,10 +18,9 @@ exports.handler = (event, context, callback) => {
     }
     try {
       getDivestmentData(jwtClient).then(divestment_vendors=>{
-        console.log(divestment_vendors);
-        // getApproved(jwtClient).then(approved_vendors=>{
-        //   checkForMatches(approved_vendors,divestment_vendors);
-        // });
+        getApproved(jwtClient).then(approved_vendors=>{
+          checkForMatches(approved_vendors,divestment_vendors);
+        });
       });
     } catch (err) {
       console.error(err);
