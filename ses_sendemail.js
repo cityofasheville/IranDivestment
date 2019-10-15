@@ -1,7 +1,8 @@
 let AWS = require('aws-sdk');
 require('dotenv').config();
 
-AWS.config.update({region: 'us-east-1'});
+var credentials = new AWS.SharedIniFileCredentials({profile: 'notifications-email'});
+AWS.config.update({region: 'us-east-1', credentials});
 
 let params = {
   Destination: { /* required */
