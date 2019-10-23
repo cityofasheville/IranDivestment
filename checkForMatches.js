@@ -1,7 +1,7 @@
 const { Client } = require('pg')
 const Cursor = require('pg-cursor')
 const {promisify} = require('util');
-let sendEmails = require('./sendEmails');
+let loadDb = require('./loadDb');
 
 require('dotenv').config();
 
@@ -14,10 +14,10 @@ async function checkForMatches(approved_vendors,divestment_vendors) {
     // keywords.forEach(keyword=>{ console.log(keyword) })
 
     const client = new Client({
-        user: process.env.user,
-        host: process.env.host,
-        database: process.env.database,
-        password: process.env.password,
+        user: process.env.mdauser,
+        host: process.env.mdahost,
+        database: process.env.mdadatabase,
+        password: process.env.mdapassword,
         port: 5432,
     });
     await client.connect();
@@ -59,7 +59,7 @@ async function checkForMatches(approved_vendors,divestment_vendors) {
         }    
     })
 
-    sendEmails(divestmentVendors)
+    loadDb(divestmentVendors)
 
 };
 

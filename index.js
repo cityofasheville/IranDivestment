@@ -1,12 +1,12 @@
 const {google} = require('googleapis');
 let privatekey = require('./client_secret.json');
-let checkForMatches = require('./checkForMatches');
+let loadDb = require('./loadDb');
 require('dotenv').config();
 
 // configure a JWT auth client
 let jwtClient = new google.auth.JWT(
   privatekey.client_email,
-  null,
+  null,  
   privatekey.private_key,
   ['https://www.googleapis.com/auth/spreadsheets.readonly']);
 //authenticate request
@@ -20,7 +20,7 @@ jwtClient.authorize(function (err, tokens) {
 try {
   getDivestmentData(jwtClient).then(divestment_vendors=>{
     getApproved(jwtClient).then(approved_vendors=>{
-      checkForMatches(approved_vendors,divestment_vendors);
+      loadDb(approved_vendors,divestment_vendors);
     });
   });
 } catch (err) {
