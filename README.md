@@ -8,7 +8,3 @@ And compares vendors Asheville currently uses. Sends email if found.
 
 Second sheet also allows whitelisting of vendors by ID.
 
-Enable Google Sheets API as described [here](https://developers.google.com/sheets/api/quickstart/nodejs). In the [Console](https://console.developers.google.com/apis), create a Service Account and download the json. Save it as client_secret.json in the program directory. Give permissions to the spreadsheet to the email address associated with the Service Account.
-
-
-NOTICE: The SES environment variable AWS_PROFILE is not working with dotenv anymore (!?!) I changed it to set the profile with SharedIniFileCredentials
