@@ -2,13 +2,10 @@
 
 Script to automate the Iran Divestment Act (IDA) process for direct pay invoices greater than $1,000. Using this script obviates the need for departments and vendors to sign an IDA Form with their invoices.
 
-Reads Iranian Vendors from the Google Sheet 
+The list of Iranian Vendors is maintained in a Google Sheet 
 https://docs.google.com/spreadsheets/d/*spreadsheetid*/edit
-And compares vendors Asheville currently uses. Sends email if found.
+Bedrock loads spreadsheet (iran_divestment.lib) and current vendors (vendors.lib) from Munis into Data Library.
+This script compares them and sends email if found.
 
 Second sheet also allows whitelisting of vendors by ID.
 
-Enable Google Sheets API as described [here](https://developers.google.com/sheets/api/quickstart/nodejs). In the [Console](https://console.developers.google.com/apis), create a Service Account and download the json. Save it as client_secret.json in the program directory. Give permissions to the spreadsheet to the email address associated with the Service Account.
-
-
-NOTICE: The SES environment variable AWS_PROFILE is not working with dotenv anymore (!?!) I changed it to set the profile with SharedIniFileCredentials
