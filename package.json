@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +16,10 @@
     "dotenv": "^8.2.0",
     "googleapis": "^52.1.0",
     "pg": "^8.2.1",
+    "snyk": "^1.316.1"
     "pg-cursor": "^2.2.1",
-    "pug": "^2.0.3"
-  }
+
+    "pug": "^3.0.0"
+  },
+  "snyk": true
 }
