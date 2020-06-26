@@ -1,7 +1,7 @@
 let AWS = require('aws-sdk');
 require('dotenv').config();
 
-var credentials = new AWS.SharedIniFileCredentials({profile: 'notifications-email'});
+var credentials = new AWS.SharedIniFileCredentials({profile: 'notifications-email'}); //reads ~/.aws/credentials for local creds
 AWS.config.update({region: 'us-east-1', credentials});
 
 let params = {
