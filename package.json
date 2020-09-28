@@ -1,19 +1,27 @@
 {
-  "name": "irand2",
+  "name": "iran-divestment",
   "version": "1.0.0",
-  "description": "",
+  "description": "Script to automate the Iran Divestment Act (IDA) process for direct pay invoices greater than $1,000. Using this script obviates the need for departments and vendors to sign an IDA Form with their invoices.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cityofasheville/IranDivestment.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cityofasheville/IranDivestment/issues"
+  },
+  "homepage": "https://github.com/cityofasheville/IranDivestment#readme",
   "dependencies": {
-    "aws-sdk": "^2.465.0",
-    "googleapis": "^39.2.0",
-    "pg": "^7.11.0",
-    "pg-cursor": "^2.0.0",
-    "pug": "^2.0.3"
+    "aws-sdk": "^2.760.0",
+    "googleapis": "^60.0.1",
+    "pg": "^8.3.3",
+    "pg-cursor": "^2.3.3",
+    "pug": "^3.0.0"
   }
 }
