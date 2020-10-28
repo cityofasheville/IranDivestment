@@ -21,7 +21,7 @@
   "homepage": "https://github.com/cityofasheville/IranDivestment#readme",
   "dependencies": {
     "aws-sdk": "^2.760.0",
-    "googleapis": "^60.0.1",
+    "googleapis": "^62.0.0",
     "pg": "^8.3.3",
     "pg-cursor": "^2.3.3",
     "pug": "^3.0.0"
