@@ -4,7 +4,7 @@ Script to automate the Iran Divestment Act (IDA) process for direct pay invoices
 
 The list of Iranian Vendors is maintained in a Google Sheet 
 https://docs.google.com/spreadsheets/d/*spreadsheetid*/edit
-Bedrock loads spreadsheet (iran_divestment.lib) and current vendors (vendors.lib) from Munis into Data Library.
+Bedrock loads spreadsheet (iran_divestment) and current vendors (vendors.lib) from Munis into MDAStore1 database.
 This script compares them and sends email if found.
 
 Second sheet also allows whitelisting of vendors by ID.

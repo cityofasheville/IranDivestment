@@ -1,75 +1,84 @@
-const {google} = require('googleapis');
-let checkForMatches = require('./checkForMatches');
-let privatekey = require('./client_secret.json');
+const { Client } = require('pg')
+const Cursor = require('pg-cursor')
+const {promisify} = require('util');
+let sendEmails = require('./sendEmails');
+const ses_sendemail = require('./ses_sendemail'); // <--test
+exports.handler = async (event) => {
+    let keyWordFound = [];          // vendors in our database containing a keyword in divestment list
+    let divestmentVendors = [];      // vendors also not marked as approved.
 
-exports.handler = (event, context, callback) => {
-  // configure a JWT auth client
-  let jwtClient = new google.auth.JWT(
-    privatekey.client_email,
-    null,
-    privatekey.private_key,
-    ['https://www.googleapis.com/auth/spreadsheets.readonly']);
-  //authenticate request
+    //approved_ids.forEach(vendor_id=>{ console.log(vendor_id) })
+    // keywords.forEach(keyword=>{ console.log(keyword) })
 
-  jwtClient.authorize(function (err, tokens) {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    try {
-      getDivestmentData(jwtClient).then(divestment_vendors=>{
-        getApproved(jwtClient).then(approved_vendors=>{
-          checkForMatches(approved_vendors,divestment_vendors);
+    const client = new Client({
+        user: process.env.user,
+        host: process.env.host,
+        database: process.env.database,
+        password: process.env.password,
+        port: 5432,
+    });
+    await client.connect();
+
+    let approved_vendors_data = await client.query("select * from internal.iran_divestment_approved_companies")
+    let approved_vendors = approved_vendors_data.rows
+    let divestment_vendors_data = await client.query("select * from internal.iran_divestment_restricted_companies")
+    let divestment_vendors = divestment_vendors_data.rows
+
+    let [keyRegExs, approved_ids] = cleanUpLists(approved_vendors,divestment_vendors);
+
+    const cursor = client.query(
+    new Cursor("select distinct a_vendor_id, a_vendor_name, a_vend_alpha_sort, v_dba from internal.vendors")
+    );
+
+    const promisifiedCursorRead = promisify(cursor.read.bind(cursor));
+
+    const ROW_COUNT = 1000;
+    while (true) {
+        const result = await promisifiedCursorRead(ROW_COUNT);
+
+        if (result.length === 0) {
+            break;
+        }
+
+        result.forEach(vendor=>{
+            keyRegExs.forEach(keyRegEx=>{
+                if (keyRegEx.test(vendor.a_vendor_name) || keyRegEx.test(vendor.a_vend_alpha_sort) || keyRegEx.test(vendor.v_dba)) {
+                    vendor.keyword = keyRegEx.toString().substring(1, keyRegEx.toString().length - 2);
+                    keyWordFound.push(vendor);
+                }
+            })
         });
-      });
-    } catch (err) {
-      console.error(err);
     }
-  });
-}
 
-function getDivestmentData(auth) {
-  return new Promise(function(resolve, reject) {
-    let spreadsheetId = process.env.spreadsheetid;
-    let range = 'Bad Actors!A5:B';
-    let sheets = google.sheets('v4');
-    sheets.spreadsheets.values.get({
-      auth,
-      spreadsheetId,
-      range
-    }, function (err, response) { console.log("err response", err, response);
-      if (err) {
-        reject(new Error('The API returned an error: ' + err));
-      }         
-      const divestment_vendors = response.data.values;
-      if (divestment_vendors) {
-        resolve(divestment_vendors);
-      } else {
-        reject(new Error('No data found.'));
-      }
+    cursor.close(() => {
+        client.end();
     });
-  });
-}
 
-function getApproved(auth) {
-  return new Promise(function(resolve, reject) {
-    let spreadsheetId = process.env.spreadsheetid;
-    let range = 'Approved Companies!A6:B';
-    let sheets = google.sheets('v4');
-    sheets.spreadsheets.values.get({
-      auth,
-      spreadsheetId,
-      range
-    }, function (err, response) {
-      if (err) {
-          reject(new Error('The API returned an error: ' + err));
-      }         
-      const approved_vendors = response.data.values;
-      if (approved_vendors) {
-        resolve(approved_vendors);
-      } else {
-        resolve(null);
-      }
-    });
-  });
+    // see if found vendors are listed as ok
+    keyWordFound.forEach(found1=>{
+        if(!approved_ids.some(appr=>{// if the vendor we found with bad keywords is not in approved list
+            return found1.a_vendor_id == appr; 
+        })){
+            divestmentVendors.push(found1);
+        }    
+    })
+
+    let ret = await sendEmails(divestmentVendors)
+    return(ret)
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+function cleanUpLists(approved_vendors,divestment_vendors){
+    //get divestment keywords (returns as regexs)
+    let dupedKeywords = divestment_vendors.map(row=>row.keywords)
+    let filteredKeywords = dupedKeywords.filter(key=>{ return !!key && key !== 'Key Search Words' });
+    let keywords = [...new Set(filteredKeywords)]; // dedupe
+    let keyRegExs = keywords.map(key=> new RegExp(key, "i"));
+
+    // get approved vendor ids
+    let approved_ids = [];
+    if(approved_vendors){
+        approved_ids = approved_vendors.map(row=>row.vendorid)
+    }
+    return [keyRegExs, approved_ids]
 }
