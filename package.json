@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/cityofasheville/IranDivestment#readme",
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.24.0",
+    "@aws-sdk/client-ses": "^3.82.0",
     "pg": "^8.3.3",
     "pg-cursor": "^2.3.3",
     "pug": "^3.0.0"
