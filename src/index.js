@@ -1,16 +1,21 @@
-const { Client } = require('pg')
-const Cursor = require('pg-cursor')
-const { promisify } = require('util')
-const sendEmails = require('./sendEmails')
-const getConnection = require('./getConnection')
-exports.handler = async (event) => {
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import Cursor from 'pg-cursor';
+import { promisify } from 'util';
+import sendEmails from './sendEmails.js';
+import getConnection from './getConnection.js';
+
+export async function handler(event) {
   const keyWordFound = [] // vendors in our database containing a keyword in divestment list
   const divestmentVendors = [] // vendors also not marked as approved.
 
   // approved_ids.forEach(vendor_id=>{ console.log(vendor_id) })
   // keywords.forEach(keyword=>{ console.log(keyword) })
 
-  const db_creds = await getConnection('pubrecdb1/mdastore1/dbadmin')
+  const db_creds = await getConnection('pubrecdb1/mdastore1/dbadmin');
+  if(event.local){
+    db_creds.host = 'localhost';
+  }
   const client = new Client({
     user: db_creds.username,
     host: db_creds.host,

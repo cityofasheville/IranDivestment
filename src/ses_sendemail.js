@@ -1,5 +1,5 @@
-const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses')
-const client = new SESClient({ region: 'us-east-1' })
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+const client = new SESClient({ region: 'us-east-1' });
 
 function ses_sendemail (emailAddrs, htmlEmail) {
   return new Promise(async (resolve, reject) => {
@@ -47,4 +47,4 @@ function ses_sendemail (emailAddrs, htmlEmail) {
   })
 };
 
-module.exports = ses_sendemail
+export default ses_sendemail;
