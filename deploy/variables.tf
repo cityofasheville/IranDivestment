@@ -18,7 +18,12 @@ variable "EMAIL_RECIPIENT_JSON" {
   description   = "Lambda Env variable"
 }
 
-variable "prog_name" {
+# Name of Lambda
+variable "production_name" {
+  type          = string
+  description   = "Name of Program"
+}
+variable "development_name" {
   type          = string
   description   = "Name of Program"
 }
