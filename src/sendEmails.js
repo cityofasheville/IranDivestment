@@ -3,7 +3,7 @@ import { join } from 'path';
 import ses_sendemail from './ses_sendemail.js';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import "dotenv/config.js";
+// import "dotenv/config.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url)); // current directory
 
